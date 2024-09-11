@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deployment
+spec:
+  replicas: 1  # Number of pod replicas
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: vijayanand3333/flask-app:1.0  # Replace with your Docker image (e.g., your Docker Hub or ECR image)
+        ports:
+        - containerPort: 5000
+        env:
+        - name: FLASK_APP
+          value: "app.py"
+        - name: FLASK_ENV
+          value: "production"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app-service
+spec:
+  selector:
+    app: flask-app
+  ports:
+    - protocol: TCP
+      port: 80  # This is the external port (clients will use it to connect)
+      targetPort: 5000  # This is the port Flask is running on inside the container
+      nodePort: 30007  # Kubernetes will map this to an available port on the EC2 nodes
+  type: NodePort
