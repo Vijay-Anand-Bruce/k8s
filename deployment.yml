@@ -14,14 +14,17 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: vijayanand3333/flask-app:1.0  # Replace with your Docker image (e.g., your Docker Hub or ECR image)
+        image: vijayanand3333/flask-app:1.0
         ports:
         - containerPort: 5000
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
         env:
         - name: FLASK_APP
           value: "app.py"
-        - name: FLASK_ENV
-          value: "production"
+
 ---
 apiVersion: v1
 kind: Service
